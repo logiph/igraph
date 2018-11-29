@@ -276,8 +276,8 @@ def parse_libs(lib_path_array)
         Thread.new do
             puts "begin parse: #{path}\n"
             lib_content = parse_lib(path)
-            lib_content[:dependence] = Hash.new
-            lib_content[:bedependence] = Hash.new
+            lib_content[:dependence] = Hash.new if lib_content != nil
+            lib_content[:bedependence] = Hash.new if lib_content != nil
             all_libs[lib_content[:name]] = lib_content if lib_content != nil
             puts "#{path} ==> done\n"
         end
@@ -473,11 +473,9 @@ def gen_graph_dependence_line(lib, lib_name, dependence_name)
     count = get_dependence_count(lib_name, dependence_name)
     path = "./symbols/#{lib_name}_#{dependence_name}.txt"
 
-    graph_lib_name = lib_name.gsub("-", "_")
-    graph_dependence_name = dependence_name.gsub("-", "_")
-    style_info = gen_style_label_by_name(graph_lib_name, count, path)
+    style_info = gen_style_label_by_name(lib_name, count, path)
 
-    "    #{graph_lib_name} -> #{graph_dependence_name} #{style_info};"
+    "    \"#{lib_name}\" -> \"#{dependence_name}\" #{style_info};"
 end
 
 # 生成关系图
@@ -492,8 +490,7 @@ def gen_dependence_graph(lib, graph_content)
             graph_content.push(line)
         end
     else
-        current_name = current_name.gsub("-", "_")
-        line = "    #{current_name};"
+        line = "    \"#{current_name}\";"
         graph_content.push(line)
     end
 end
@@ -517,8 +514,7 @@ def recursive_gen_graphviz(libs, current_content, gened_libs, graphviz_content)
             graphviz_content.push(line)
         end
     else
-        current_name = current_name.gsub("-", "_")
-        line = "    #{current_name};"
+        line = "    \"#{current_name}\";"
         graphviz_content.push(line)
     end
 
@@ -546,7 +542,7 @@ def gen_cluster_graph(libs)
     libs.each_value do |lib|
 
         # puts lib
-        name = lib[:name].gsub("-", "_")
+        name = lib[:name]
         dependence = lib[:dependence]
         bedependence = lib[:bedependence]
 
@@ -582,10 +578,11 @@ def gen_styled_graph_content(main_graph_content)
 
     result = Array.new
     styled_content.each_key do |name|
+        name = name.gsub("\"", "")
         # file:///Users/logiph/Experiment/output/index.pdf
         # filepath = File.expand_path("./output/#{name}.pdf")
         color = gen_color_by_name(name)
-        line = "    #{name} [fontsize=60, fontcolor=#{color} , URL=\"./#{name}.pdf\"];"
+        line = "    \"#{name}\" [fontsize=60, fontcolor=#{color} , URL=\"./#{name}.pdf\"];"
         result.push(line)
     end
     result
