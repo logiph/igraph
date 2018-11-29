@@ -19,4 +19,5 @@ ArchitectureGraphTool
 
 ![Image text](https://github.com/logiph/igraph/blob/master/step3.jpg)
 
-
+## 剩余问题
+- category的引用方式目前暂时无法解析到
