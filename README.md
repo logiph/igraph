@@ -11,7 +11,7 @@ ArchitectureGraphTool
 - 相当于项目地图，给开发人员对于提供整个工程的全局视角，指导开发和架构进行工程梳理
 
 ## 安装&使用
-- 本机安装好dot命令行工具
+- 本机安装好dot命令行工具(已安装好brew的话，brew install dot,没有的话安装graphviz工具，该工具自带dot)
 - clone 本工程到本地目录
 - 修改igraph.cfg 配置文件，将需要生成架构图的工程先选择模拟器编译，然后提取link命令到配置文件中
 - 开启终端执行 ruby ./igraph.rb
